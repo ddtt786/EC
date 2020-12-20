@@ -18,8 +18,7 @@ function wait(msecs) {
 }
 
 $.ajaxSetup({ async: false });
-
-const entry = {
+let entry = {
     ds: {
         sel(sel) {
             return {
@@ -34,6 +33,7 @@ const entry = {
                             target: sel,
                         }
                     })
+                    console.warn("댓글을 달았습니다.")
                 },
                 like() {
                     $.ajax({
@@ -76,6 +76,7 @@ const entry = {
                         category:"free"
                     }
                 });
+                console.log("글을 올렸습니다.")
             },
             delete(del) {
                 $.get(entry.ds.free.my, d => {
@@ -92,6 +93,7 @@ const entry = {
                         })
                     }
                 })
+                console.warn("글을 삭제했습니다.")
             }
         },
         qna: {
@@ -123,6 +125,7 @@ const entry = {
                         category:"qna"
                     }
                 });
+                console.log("글을 올렸습니다.")
             },
             delete(del) {
                 $.get(entry.ds.qna.my, d => {
@@ -139,6 +142,7 @@ const entry = {
                         })
                     }
                 })
+                console.warn("글을 삭제했습니다.")
             }
         },
         tip: {
@@ -170,6 +174,7 @@ const entry = {
                         category:"tip"
                     }
                 });
+                console.log("글을 올렸습니다.")
             },
             delete(del) {
                 $.get(entry.ds.tip.my, d => {
@@ -186,6 +191,7 @@ const entry = {
                         })
                     }
                 })
+                console.warn("글을 삭제했습니다.")
             }
         }
     },
@@ -212,6 +218,7 @@ const entry = {
                         targetSubject: "project", targetType: "individual"
                     }
                 })
+                console.log(`${pj}에 좋아요를 달았습니다.`)
             },
             star() {
                 $.ajax({
@@ -221,6 +228,7 @@ const entry = {
                         targetSubject: "project", targetType: "individual",
                     }
                 })
+                console.log(`${pj}에 관심작품을 달았습니다.`)
             },
             save(saver) {
                 if(saver == undefined) {
@@ -232,6 +240,7 @@ const entry = {
                             console.log(data)
                         }
                     })
+                    console.log(`${pj}를 저장했습니다.`)
                 }else{
                     $.ajax({
                         url: `https://playentry.org/api/project/${pj}`,
@@ -241,6 +250,7 @@ const entry = {
                             console.log(data)
                         }
                     })
+                    console.warn(`${pj}의 제목을 ${saver}로 바꾸고 저장했습니다.`)
                 }
             },
             comment(com) {
@@ -254,7 +264,15 @@ const entry = {
                         target: pj,
                     }
                 })
+                console.warn(`${pj}에 댓글을 달았습니다.`)
             },
         }
     }
+}
+
+if(confirm("EC가 당신의 계정을 제어하는 것을 허용하십니까? (이로 인한 피해는 책임지지 않습니다.)") == true){
+    console.warn("권한을 허용했습니다. 글 삭제,작품 저장,댓글과 같은 것을 사용자 동의 없이 EC가 실행할 수 있습니다.")
+    }else{
+    entry = undefined
+    console.log("권한을 거부했습니다.")
 }
