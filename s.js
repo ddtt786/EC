@@ -21,24 +21,34 @@ $.ajaxSetup({ async: false });
 
 const entry = {
     ds: {
+        sel(sel) {
+            return {
+                comment(com) {
+                    $.ajax({
+                        url: `https://playentry.org/api/comment`,
+                        type: "POST",
+                        data: {
+                            targetSubject: "discuss", 
+                            targetType: "individual",
+                            content: com,
+                            target: sel,
+                        }
+                    })
+                },
+                like() {
+                    $.ajax({
+                        url: `https://playentry.org/api/discuss/like/${sel}?targetSubject=discuss&targetType=individual`,
+                        type: "POST",
+                        data: {
+                            targetSubject: "discuss", 
+                            targetType: "individual",
+                        }
+                    })
+                }
+            }
+        },
         free: {
             my : `https://playentry.org/api/discuss/find?username=${user.username}&title=&search_title=&sort=created&rows=0&page=1&category=free`,
-            sel(sel) {
-                return {
-                    comment(com) {
-                        $.ajax({
-                            url: `https://playentry.org/api/comment`,
-                            type: "POST",
-                            data: {
-                                targetSubject: "discuss", 
-                                targetType: "individual",
-                                content: com,
-                                target: sel,
-                            }
-                        })
-                    }
-                }
-            },
             get(getr) {
                 $.get('https://playentry.org/api/discuss/find?category=free', d => {
                     ___title = d.data[0].title;
@@ -86,22 +96,6 @@ const entry = {
         },
         qna: {
             my : `https://playentry.org/api/discuss/find?username=${user.username}&title=&search_title=&sort=created&rows=0&page=1&category=qna`,
-            sel(sel) {
-                return {
-                    comment(com) {
-                        $.ajax({
-                            url: `https://playentry.org/api/comment`,
-                            type: "POST",
-                            data: {
-                                targetSubject: "discuss", 
-                                targetType: "individual",
-                                content: com,
-                                target: sel,
-                            }
-                        })
-                    }
-                }
-            },
             get(getr) {
                 $.get('https://playentry.org/api/discuss/find?category=qna', d => {
                     ___title = d.data[0].title;
@@ -149,22 +143,6 @@ const entry = {
         },
         tip: {
             my : `https://playentry.org/api/discuss/find?username=${user.username}&title=&search_title=&sort=created&rows=0&page=1&category=tips`,
-            sel(sel) {
-                return {
-                    comment(com) {
-                        $.ajax({
-                            url: `https://playentry.org/api/comment`,
-                            type: "POST",
-                            data: {
-                                targetSubject: "discuss", 
-                                targetType: "individual",
-                                content: com,
-                                target: sel,
-                            }
-                        })
-                    }
-                }
-            },
             get(getr) {
                 $.get('https://playentry.org/api/discuss/find?category=tip', d => {
                     ___title = d.data[0].title;
