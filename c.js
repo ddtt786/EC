@@ -270,9 +270,16 @@ let entry = {
     }
 }
 
-if(confirm("EC가 당신의 계정을 제어하는 것을 허용하십니까? (이로 인한 피해는 책임지지 않습니다.)") == true){
-    console.warn("권한을 허용했습니다. 글 삭제,작품 저장,댓글과 같은 것을 사용자 동의 없이 EC가 실행할 수 있습니다.")
+if(confirm("글 관리 권한을 허용하시겠습니까? (글 올리기, 삭제, 댓글 달기와 같은 코드를 실행할 수 있습니다.)") == true){
+    console.warn("글 관리 권한을 허용했습니다.")
     }else{
-    entry = undefined
+    entry.ds = undefined
+    console.log("권한을 거부했습니다.")
+}
+
+if(confirm("작품 관리 권한을 허용하시겠습니까? (작품 저장하기, 제목 바꾸기, 좋아요/관심작품 누르기, 댓글 달기와 같은 코드를 실행할 수 있습니다.))") == true){
+    console.warn("작품 관리 권한을 허용했습니다.")
+    }else{
+    entry.project = undefined
     console.log("권한을 거부했습니다.")
 }
