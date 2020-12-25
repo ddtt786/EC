@@ -277,6 +277,11 @@ let entry = {
                 if(getr == "profile"){
                     ret = `https://playentry.org/uploads/profile/${user._id.slice(0,2)}/${user._id.slice(2,4)}/avatar_${user._id}.png`
                 }
+                if(getr == "title"){
+                    $.get(`https://playentry.org/api/getUserByUsername/${user.username}`, d => {
+                        ret = d.description;
+                    })
+                }
                 return ret
             },
             set: {
