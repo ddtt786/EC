@@ -267,19 +267,52 @@ let entry = {
                 console.warn(`${pj}에 댓글을 달았습니다.`)
             },
         }
+    },
+    my: {
+        intro: {
+            get(getr) {
+                if(getr == "backimg"){
+                    ret = `https://playentry.org/uploads/profile/${user._id.slice(0,2)}/${user._id.slice(2,4)}/blog_${user._id}.png`
+                }
+                if(getr == "profile"){
+                    ret = `https://playentry.org/uploads/profile/${user._id.slice(0,2)}/${user._id.slice(2,4)}/avatar_${user._id}.png`
+                }
+                return ret
+            },
+            set: {
+                title(titl) {
+                    $.ajax({
+                        url: `https://playentry.org/rest/picture/upload_confirm`,
+                        type: "POST",
+                        data: {
+                            avatarImage: true,
+                            blogImage: entry.my.intro.get("backimg"),
+                            description: titl
+                        }
+                    })
+                }
+            }
+        }
     }
 }
 
-if(confirm("글 관리 권한을 허용하시겠습니까? (글 올리기, 삭제, 댓글 달기와 같은 코드를 실행할 수 있습니다.)") == true){
-    console.warn("글 관리 권한을 허용했습니다.")
+if(confirm("글 권한을 허용하시겠습니까? (글 올리기, 삭제, 댓글 달기와 같은 코드를 실행할 수 있습니다.)") == true){
+    console.warn("글 권한을 허용했습니다.")
     }else{
     entry.ds = undefined
     console.log("권한을 거부했습니다.")
 }
 
-if(confirm("작품 관리 권한을 허용하시겠습니까? (작품 저장하기, 제목 바꾸기, 좋아요/관심작품 누르기, 댓글 달기와 같은 코드를 실행할 수 있습니다.))") == true){
-    console.warn("작품 관리 권한을 허용했습니다.")
+if(confirm("작품 권한을 허용하시겠습니까? (작품 저장하기, 제목 바꾸기, 좋아요/관심작품 누르기, 댓글 달기와 같은 코드를 실행할 수 있습니다.)") == true){
+    console.warn("작품 권한을 허용했습니다.")
     }else{
     entry.project = undefined
+    console.log("권한을 거부했습니다.")
+}
+
+if(confirm("계정 권한을 허용하시겠습니까? (프로필 가져오기, 배경사진 가져오기, 상태메시지 변경과 같은 코드를 실행할 수 있습니다.)") == true){
+    console.warn("계정 권한을 허용했습니다.")
+    }else{
+    entry.my = undefined
     console.log("권한을 거부했습니다.")
 }
