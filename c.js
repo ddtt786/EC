@@ -1,298 +1,190 @@
-let ___title
-let __id
-let __like
-let __view
-let __user
-let ___titlep
-let __likep
-let __viewp
-let __creator
-let ret
-
-function wait(msecs) {
-    let start = new Date().getTime();
-    let cur = start;
-    while(cur - start < msecs) {
-        cur = new Date().getTime();
+const EC = {
+    share : undefined,
+    pj: {
+        titl : undefined,
+        like : undefined,
+        view : undefined,
+        creator : undefined,
+        remake : undefined,
+    },
+    sns: {
+        titl : undefined,
+        id : undefined,
+        like : undefined,
+        view : undefined,
+        writer : undefined,
     }
 }
 
 $.ajaxSetup({ async: false });
-let entry = {
-    ds: {
-        sel(sel) {
-            return {
-                comment(com) {
-                    $.ajax({
-                        url: `https://playentry.org/api/comment`,
-                        type: "POST",
-                        data: {
-                            targetSubject: "discuss", 
-                            targetType: "individual",
-                            content: com,
-                            target: sel,
-                        }
-                    })
-                    console.warn("댓글을 달았습니다.")
-                },
-                like() {
-                    $.ajax({
-                        url: `https://playentry.org/api/discuss/like/${sel}?targetSubject=discuss&targetType=individual`,
-                        type: "POST",
-                        data: {
-                            targetSubject: "discuss", 
-                            targetType: "individual",
-                        }
-                    })
-                }
-            }
-        },
-        free: {
-            my : `https://playentry.org/api/discuss/find?username=${user.username}&title=&search_title=&sort=created&rows=0&page=1&category=free`,
-            get(getr) {
-                $.get('https://playentry.org/api/discuss/find?category=free', d => {
-                    ___title = d.data[0].title;
-                    __id = d.data[0]._id;
-                    __like = d.data[0].likesLength;
-                    __view = d.data[0].visit;
-                    __user = d.data[0].owner;
-                    if(getr == "title"){ret = ___title}
-                    if(getr == "id"){ret = __id}
-                    if(getr == "like"){ret = __like}
-                    if(getr == "view"){ret = __view}
-                    if(getr == "user"){ret = __user}
-                })
-                return ret
-            },
-            write(t,p) {
-                $.ajax({
-                    url:"https://playentry.org/api/discuss/",
-                    type:"POST",
-                    data:{
-                        content:p,
-                        title:t,
-                        groupNotice:false,
-                        images:[],
-                        category:"free"
-                    }
-                });
-                console.log("글을 올렸습니다.")
-            },
-            delete(del) {
-                $.get(entry.ds.free.my, d => {
-                    delfree = d.data[0]._id;
-                    if(del == undefined) {
-                        $.ajax({
-                            url: `https://playentry.org/api/discuss/${delfree}`,
-                            type: "DELETE",
-                        })
-                    }else{
-                        $.ajax({
-                            url: `https://playentry.org/api/discuss/${del}`,
-                            type: "DELETE",
-                        })
-                    }
-                })
-                console.warn("글을 삭제했습니다.")
-            }
-        },
-        qna: {
-            my : `https://playentry.org/api/discuss/find?username=${user.username}&title=&search_title=&sort=created&rows=0&page=1&category=qna`,
-            get(getr) {
-                $.get('https://playentry.org/api/discuss/find?category=qna', d => {
-                    ___title = d.data[0].title;
-                    __id = d.data[0]._id;
-                    __like = d.data[0].likesLength;
-                    __view = d.data[0].visit;
-                    __user = d.data[0].owner;
-                    if(getr == "title"){ret = ___title}
-                    if(getr == "id"){ret = __id}
-                    if(getr == "like"){ret = __like}
-                    if(getr == "view"){ret = __view}
-                    if(getr == "user"){ret = __user}
-                })
-                return ret
-            },
-            write(t,p) {
-                $.ajax({
-                    url:"https://playentry.org/api/discuss/",
-                    type:"POST",
-                    data:{
-                        content:p,
-                        title:t,
-                        groupNotice:false,
-                        images:[],
-                        category:"qna"
-                    }
-                });
-                console.log("글을 올렸습니다.")
-            },
-            delete(del) {
-                $.get(entry.ds.qna.my, d => {
-                    delfree = d.data[0]._id;
-                    if(del == undefined) {
-                        $.ajax({
-                            url: `https://playentry.org/api/discuss/${delfree}`,
-                            type: "DELETE",
-                        })
-                    }else{
-                        $.ajax({
-                            url: `https://playentry.org/api/discuss/${del}`,
-                            type: "DELETE",
-                        })
-                    }
-                })
-                console.warn("글을 삭제했습니다.")
-            }
-        },
-        tip: {
-            my : `https://playentry.org/api/discuss/find?username=${user.username}&title=&search_title=&sort=created&rows=0&page=1&category=tips`,
-            get(getr) {
-                $.get('https://playentry.org/api/discuss/find?category=tip', d => {
-                    ___title = d.data[0].title;
-                    __id = d.data[0]._id;
-                    __like = d.data[0].likesLength;
-                    __view = d.data[0].visit;
-                    __user = d.data[0].owner;
-                    if(getr == "title"){ret = ___title}
-                    if(getr == "id"){ret = __id}
-                    if(getr == "like"){ret = __like}
-                    if(getr == "view"){ret = __view}
-                    if(getr == "user"){ret = __user}
-                })
-                return ret
-            },
-            write(t,p) {
-                $.ajax({
-                    url:"https://playentry.org/api/discuss/",
-                    type:"POST",
-                    data:{
-                        content:p,
-                        title:t,
-                        groupNotice:false,
-                        images:[],
-                        category:"tip"
-                    }
-                });
-                console.log("글을 올렸습니다.")
-            },
-            delete(del) {
-                $.get(entry.ds.tip.my, d => {
-                    delfree = d.data[0]._id;
-                    if(del == undefined) {
-                        $.ajax({
-                            url: `https://playentry.org/api/discuss/${delfree}`,
-                            type: "DELETE",
-                        })
-                    }else{
-                        $.ajax({
-                            url: `https://playentry.org/api/discuss/${del}`,
-                            type: "DELETE",
-                        })
-                    }
-                })
-                console.warn("글을 삭제했습니다.")
-            }
-        }
-    },
-    project(pj) {
+
+const entry = {
+    project(projectimport) {
         return {
-            get(getr) {
-                $.get(`https://playentry.org/api/project/${pj}`, d => {
-                    ___titlep = d.name;
-                    __likep = d.likeCnt;
-                    __viewp = d.visit;
-                    __creator = d.username;
-                    if(getr == "title"){ret = ___titlep}
-                    if(getr == "like"){ret = __likep}
-                    if(getr == "view"){ret = __viewp}
-                    if(getr == "creator"){ret = __creator}
+            get(imported) {
+                $.get(`https://playentry.org/api/project/${projectimport}`, data => {
+                    function getimport(get,rtrn) {
+                        if(imported == get) {
+                            EC.share = rtrn;
+                        }
+                    }
+                    EC.pj.titl = data.name;
+                    EC.pj.like = data.likeCnt;
+                    EC.pj.view = data.visit;
+                    EC.pj.creator = data.username;
+                    EC.pj.remake = data.childCnt;
+                    getimport("title", EC.pj.titl);
+                    getimport("like", EC.pj.like);
+                    getimport("view", EC.pj.view);
+                    getimport("creator", EC.pj.creator);
+                    getimport("remake", EC.pj.remake);
                 })
-                return ret
+                return EC.share;
             },
             like() {
                 $.ajax({
-                    url: `https://playentry.org/api/project/like/${pj}`,
+                    url: `https://playentry.org/api/project/like/${projectimport}`,
                     type: "POST",
                     data: {
                         targetSubject: "project", targetType: "individual"
                     }
                 })
-                console.log(`${pj}에 좋아요를 달았습니다.`)
             },
             star() {
                 $.ajax({
-                    url: `https://playentry.org/api/project/favorite/${pj}`,
+                    url: `https://playentry.org/api/project/favorite/${projectimport}`,
                     type: "POST",
                     data: {
-                        targetSubject: "project", targetType: "individual",
+                        targetSubject: "project", targetType: "individual"
                     }
                 })
-                console.log(`${pj}에 관심작품을 달았습니다.`)
             },
-            save(saver) {
-                if(saver == undefined) {
+            save(save) {
+                if(save == undefined) {
                     $.ajax({
-                        url: `https://playentry.org/api/project/${pj}`,
+                        url: `https://playentry.org/api/project/${projectimport}`,
                         type: "PUT",
-                        data: { "isopen": true, "group": [] },
-                        success: function (data) {
-                            console.log(data)
-                        }
+                        data: {
+                            isopen : true
+                        },
                     })
-                    console.log(`${pj}를 저장했습니다.`)
                 }else{
                     $.ajax({
-                        url: `https://playentry.org/api/project/${pj}`,
+                        url: `https://playentry.org/api/project/${projectimport}`,
                         type: "PUT",
-                        data: { "isopen": true, "group": [] ,name: saver,},
-                        success: function (data) {
-                            console.log(data)
+                        data: {
+                            isopen : true,
+                            name : save
                         }
                     })
-                    console.warn(`${pj}의 제목을 ${saver}로 바꾸고 저장했습니다.`)
                 }
             },
-            comment(com) {
+            comment(comment) {
                 $.ajax({
                     url: `https://playentry.org/api/comment`,
                     type: "POST",
                     data: {
                         targetSubject: "project", 
                         targetType: "individual",
-                        content: com,
-                        target: pj,
+                        content: comment,
+                        target: projectimport,
                     }
                 })
-                console.warn(`${pj}에 댓글을 달았습니다.`)
-            },
+            }
         }
     },
-    my: {
-        intro: {
-            get(getr) {
-                if(getr == "backimg"){
-                    ret = `https://playentry.org/uploads/profile/${user._id.slice(0,2)}/${user._id.slice(2,4)}/blog_${user._id}.png`
+    sns : {
+        category(category) {
+            return {
+                num(num) {
+                    if(category == "tip") {
+                        $.get(`https://playentry.org/api/discuss/find?category=${category}s`, data => {
+                            EC.share = data.data[num - 1]._id
+                        })
+                    }else{
+                        $.get(`https://playentry.org/api/discuss/find?category=${category}`, data => {
+                            EC.share = data.data[num - 1]._id
+                        })
+                    }
+                    return EC.share
+                },
+                write(title,contents) {
+                    $.ajax({
+                        url:"https://playentry.org/api/discuss/",
+                        type:"POST",
+                        data:{
+                            content : contents,
+                            title : title,
+                            groupNotice : false,
+                            images : [],
+                            category: category
+                        }
+                    });
                 }
-                if(getr == "profile"){
-                    ret = `https://playentry.org/uploads/profile/${user._id.slice(0,2)}/${user._id.slice(2,4)}/avatar_${user._id}.png`
-                }
-                if(getr == "title"){
-                    $.get(`https://playentry.org/api/getUserByUsername/${user.username}`, d => {
-                        ret = d.description;
+            }
+        },
+        select(sel) {
+            return {
+                get(imported) {
+                    $.get(`https://playentry.org/api/discuss/${sel}`, data => {
+                        function getimport(get,rtrn) {
+                            if(imported == get) {
+                                EC.share = rtrn;
+                            }
+                        }
+                        EC.sns.titl = data.title;
+                        EC.sns.like = data.likesLength;
+                        EC.sns.view = data.visit;
+                        EC.sns.writer = data.owner;
+                        EC.sns.id = data._id;
+                        getimport("title", EC.sns.titl);
+                        getimport("like", EC.sns.like);
+                        getimport("view", EC.sns.view);
+                        getimport("writer", EC.sns.writer);
+                        getimport("id", EC.sns.id);
+                    })
+                    return EC.share;
+                },
+                comment(content) {
+                    $.ajax({
+                        url: `https://playentry.org/api/comment`,
+                        type: "POST",
+                        data: {
+                            targetSubject: "discuss", 
+                            targetType: "individual",
+                            content: content,
+                            target: sel,
+                        }
                     })
                 }
-                return ret
+            }
+        }
+    },
+    user: {
+        intro: {
+            get(imported) {
+                if(imported == "backimg"){
+                    EC.share = `https://playentry.org/uploads/profile/${user._id.slice(0,2)}/${user._id.slice(2,4)}/blog_${user._id}.png`
+                }
+                if(imported == "profile"){
+                    EC.share = `https://playentry.org/uploads/profile/${user._id.slice(0,2)}/${user._id.slice(2,4)}/avatar_${user._id}.png`
+                }
+                if(imported == "title"){
+                    $.get(`https://playentry.org/api/getUserByUsername/${user.username}`, d => {
+                        EC.share = d.description;
+                    })
+                }
+                return EC.share
             },
             set: {
-                title(titl) {
+                title(title) {
                     $.ajax({
                         url: `https://playentry.org/rest/picture/upload_confirm`,
                         type: "POST",
                         data: {
                             avatarImage: true,
                             blogImage: entry.my.intro.get("backimg"),
-                            description: titl
+                            description: title
                         }
                     })
                 }
@@ -301,23 +193,23 @@ let entry = {
     }
 }
 
-if(confirm("글 권한을 허용하시겠습니까? (글 올리기, 삭제, 댓글 달기와 같은 코드를 실행할 수 있습니다.)") == true){
+if(confirm("글 권한을 허용하시겠습니까?") == true){
     console.warn("글 권한을 허용했습니다.")
-    }else{
-    entry.ds = undefined
+    } else {
+    entry.sns = undefined
     console.log("권한을 거부했습니다.")
 }
 
-if(confirm("작품 권한을 허용하시겠습니까? (작품 저장하기, 제목 바꾸기, 좋아요/관심작품 누르기, 댓글 달기와 같은 코드를 실행할 수 있습니다.)") == true){
+if(confirm("작품 권한을 허용하시겠습니까?") == true){
     console.warn("작품 권한을 허용했습니다.")
-    }else{
+} else {
     entry.project = undefined
     console.log("권한을 거부했습니다.")
 }
 
-if(confirm("계정 권한을 허용하시겠습니까? (프로필 가져오기, 배경사진 가져오기, 상태메시지 변경과 같은 코드를 실행할 수 있습니다.)") == true){
+if(confirm("계정 권한을 허용하시겠습니까?") == true){
     console.warn("계정 권한을 허용했습니다.")
-    }else{
-    entry.my = undefined
+} else {
+    entry.user = undefined
     console.log("권한을 거부했습니다.")
 }
