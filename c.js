@@ -1,5 +1,8 @@
+let id
+
 const EC = {
     share : undefined,
+    auth : "",
     pj: {
         titl : undefined,
         like : undefined,
@@ -93,70 +96,73 @@ const entry = {
             }
         }
     },
-    sns : {
-        category(category) {
-            return {
-                num(num) {
-                    if(category == "tip") {
-                        $.get(`https://playentry.org/api/discuss/find?category=${category}s`, data => {
-                            EC.share = data.data[num - 1]._id
-                        })
-                    }else{
-                        $.get(`https://playentry.org/api/discuss/find?category=${category}`, data => {
-                            EC.share = data.data[num - 1]._id
-                        })
+    sns(snsselect){
+        return {
+            write(title,contents) {
+                $.ajax({
+                    url:"https://playentry.org/api/discuss/",
+                    type:"POST",
+                    data:{
+                        content : contents,
+                        title : title,
+                        groupNotice : false,
+                        images : [],
+                        category: snsselect
                     }
-                    return EC.share
-                },
-                write(title,contents) {
-                    $.ajax({
-                        url:"https://playentry.org/api/discuss/",
-                        type:"POST",
-                        data:{
-                            content : contents,
-                            title : title,
-                            groupNotice : false,
-                            images : [],
-                            category: category
-                        }
-                    });
-                }
-            }
-        },
-        select(sel) {
-            return {
-                get(imported) {
-                    $.get(`https://playentry.org/api/discuss/${sel}`, data => {
-                        function getimport(get,rtrn) {
-                            if(imported == get) {
-                                EC.share = rtrn;
-                            }
-                        }
-                        EC.sns.titl = data.title;
-                        EC.sns.like = data.likesLength;
-                        EC.sns.view = data.visit;
-                        EC.sns.writer = data.owner;
-                        EC.sns.id = data._id;
-                        getimport("title", EC.sns.titl);
-                        getimport("like", EC.sns.like);
-                        getimport("view", EC.sns.view);
-                        getimport("writer", EC.sns.writer);
-                        getimport("id", EC.sns.id);
+                });
+            },
+            get(geting) {
+                if(snsselect == "tip") {
+                    $.get(`https://playentry.org/api/discuss/find?category=${snsselect}s`, ({data}) => {
+                        EC.share = data[geting - 1]._id
                     })
-                    return EC.share;
-                },
-                comment(content) {
-                    $.ajax({
-                        url: `https://playentry.org/api/comment`,
-                        type: "POST",
-                        data: {
-                            targetSubject: "discuss", 
-                            targetType: "individual",
-                            content: content,
-                            target: sel,
-                        }
+                }else{
+                    $.get(`https://playentry.org/api/discuss/find?category=${snsselect}`, ({data}) => {
+                        EC.share = data[geting - 1]._id
                     })
                 }
+                return EC.share
+            },
+            getinfo(imported) {
+                $.get(`https://playentry.org/api/discuss/${snsselect}`, data => {
+                    function getimport(get,rtrn) {
+                        if(imported == get) {
+                            EC.share = rtrn;
+                        }
+                    }
+                    EC.sns.titl = data.title;
+                    EC.sns.like = data.likesLength;
+                    EC.sns.view = data.visit;
+                    EC.sns.writer = data.owner;
+                    EC.sns.id = data._id;
+                    getimport("title", EC.sns.titl);
+                    getimport("like", EC.sns.like);
+                    getimport("view", EC.sns.view);
+                    getimport("writer", EC.sns.writer);
+                    getimport("id", EC.sns.id);
+                })
+                return EC.share;
+            },
+            comment(content) {
+                $.ajax({
+                    url: `https://playentry.org/api/comment`,
+                    type: "POST",
+                    data: {
+                        targetSubject: "discuss", 
+                        targetType: "individual",
+                        content: content,
+                        target: snsselect,
+                    }
+                })
+            },
+            like() {
+                $.ajax({
+                    url: `https://playentry.org/api/discuss/like/${snsselect}?targetSubject=discuss&targetType=individual`,
+                    type: "POST",
+                    data: {
+                        targetSubject: "discuss", targetType: "individual"
+                    }
+                })
             }
         }
     },
@@ -193,23 +199,23 @@ const entry = {
     }
 }
 
-if(confirm("글 권한을 허용하시겠습니까?") == true){
-    console.warn("글 권한을 허용했습니다.")
-    } else {
-    entry.sns = undefined
-    console.log("권한을 거부했습니다.")
+function at() {
+    if(EC.auth == "글") {entry.sns = undefined}
+    if(EC.auth == "작품") {entry.project = undefined}
+    if(EC.auth == "계정") {entry.user = undefined}
 }
 
-if(confirm("작품 권한을 허용하시겠습니까?") == true){
-    console.warn("작품 권한을 허용했습니다.")
-} else {
-    entry.project = undefined
-    console.log("권한을 거부했습니다.")
+function con(con) {
+    if(confirm(`${con} 권한을 허용하시겠습니까?`) == true) {
+        console.warn(`${con} 권한을 허용했습니다.`);
+        EC.auth = con
+    }else{
+        EC.auth = con
+        at()
+        console.log("권한을 거부했습니다.");
+    }
 }
 
-if(confirm("계정 권한을 허용하시겠습니까?") == true){
-    console.warn("계정 권한을 허용했습니다.")
-} else {
-    entry.user = undefined
-    console.log("권한을 거부했습니다.")
-}
+con('글')
+con('작품')
+con('계정')
