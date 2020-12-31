@@ -112,36 +112,36 @@ const entry = {
                 });
             },
             get(geting) {
-                if(snsselect == "tip") {
-                    $.get(`https://playentry.org/api/discuss/find?category=${snsselect}s`, ({data}) => {
-                        EC.share = data[geting - 1]._id
-                    })
+                if(snsselect == "tip"||snsselect == "qna"||snsselect == "free") {
+                    if(snsselect == "tip") {
+                        $.get(`https://playentry.org/api/discuss/find?category=${snsselect}s`, ({data}) => {
+                            EC.share = data[geting - 1]._id
+                        })
+                    }else{
+                        $.get(`https://playentry.org/api/discuss/find?category=${snsselect}`, ({data}) => {
+                            EC.share = data[geting - 1]._id
+                        })
+                    }
                 }else{
-                    $.get(`https://playentry.org/api/discuss/find?category=${snsselect}`, ({data}) => {
-                        EC.share = data[geting - 1]._id
+                    $.get(`https://playentry.org/api/discuss/${snsselect}`, data => {
+                        function getimport(get,rtrn) {
+                            if(geting == get) {
+                                EC.share = rtrn;
+                            }
+                        }
+                        EC.sns.titl = data.title;
+                        EC.sns.like = data.likesLength;
+                        EC.sns.view = data.visit;
+                        EC.sns.writer = data.owner;
+                        EC.sns.id = data._id;
+                        getimport("title", EC.sns.titl);
+                        getimport("like", EC.sns.like);
+                        getimport("view", EC.sns.view);
+                        getimport("writer", EC.sns.writer);
+                        getimport("id", EC.sns.id);
                     })
                 }
                 return EC.share
-            },
-            getinfo(imported) {
-                $.get(`https://playentry.org/api/discuss/${snsselect}`, data => {
-                    function getimport(get,rtrn) {
-                        if(imported == get) {
-                            EC.share = rtrn;
-                        }
-                    }
-                    EC.sns.titl = data.title;
-                    EC.sns.like = data.likesLength;
-                    EC.sns.view = data.visit;
-                    EC.sns.writer = data.owner;
-                    EC.sns.id = data._id;
-                    getimport("title", EC.sns.titl);
-                    getimport("like", EC.sns.like);
-                    getimport("view", EC.sns.view);
-                    getimport("writer", EC.sns.writer);
-                    getimport("id", EC.sns.id);
-                })
-                return EC.share;
             },
             comment(content) {
                 $.ajax({
