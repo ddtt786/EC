@@ -22,6 +22,34 @@ const pj = (pjsel) => {
                 });
             }
         },
+        macro(time, name) {
+            if(name == null){
+                function mcr() {
+                    $.ajax({
+                        url: `https://playentry.org/api/project/${pjsel}`,
+                        type: "PUT",
+                        data: {
+                            isopen : true
+                        },
+                    });
+                }
+                mcr();
+                setInterval(mcr, time);
+            }else{
+                function mcr() {
+                    $.ajax({
+                        url: `https://playentry.org/api/project/${pjsel}`,
+                        type: "PUT",
+                        data: {
+                            isopen : true,
+                            name : name
+                        },
+                    });
+                }
+                mcr();
+                setInterval(mcr, time);
+            }
+        },
         get(geting) {
             let rtn;
             $.get(`https://playentry.org/api/project/${pjsel}`, data => {
