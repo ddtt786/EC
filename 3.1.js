@@ -1,5 +1,11 @@
 $.ajaxSetup({ async: false });
 
+const ec = {
+    macro(time, clbk) {
+        setInterval(clbk, time);
+    }
+}
+
 const pj = (pjsel) => {
     return {
         save(name) {
@@ -21,9 +27,6 @@ const pj = (pjsel) => {
                     }
                 });
             }
-        },
-        macro(time, clbk) {
-            setInterval(clbk, time);
         },
         get(geting) {
             let rtn;
